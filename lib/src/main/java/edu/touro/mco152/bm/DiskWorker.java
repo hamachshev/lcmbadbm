@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,10 +51,9 @@ public class DiskWorker {
 
 
     void setDoInBackground(){
-        uiWorker.setDoInBackground(new Runnable() {
+        uiWorker.setDoInBackground(new Callable<Boolean>() {
             @Override
-            public void run() {
-                try {
+            public Boolean call()  throws Exception{
 
 
         /*
@@ -297,9 +297,7 @@ public class DiskWorker {
                         App.nextMarkNumber += App.numOfMarks;
                         return true;
 
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+
             }
         });
     }

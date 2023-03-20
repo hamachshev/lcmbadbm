@@ -1,6 +1,7 @@
 package edu.touro.mco152.bm;
 
 import java.beans.PropertyChangeListener;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 public interface UIWorker<T, V> {
@@ -17,5 +18,5 @@ public interface UIWorker<T, V> {
 
     void executeProcess();
 
-    void setDoInBackground(Runnable doInBackground);
+    void setDoInBackground(Callable doInBackground);
 }

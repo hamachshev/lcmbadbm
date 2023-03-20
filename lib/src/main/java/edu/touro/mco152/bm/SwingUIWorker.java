@@ -5,6 +5,7 @@ import edu.touro.mco152.bm.ui.Gui;
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
@@ -13,10 +14,10 @@ import static edu.touro.mco152.bm.App.dataDir;
 public class SwingUIWorker extends SwingWorker<Boolean, DiskMark> implements UIWorker<Boolean, DiskMark> {
     // Record any success or failure status returned from SwingWorker (might be us or super)
     Boolean lastStatus = null;  // so far unknown'
-    private Runnable doInBackground;
+    private Callable<Boolean> doInBackground;
 
     @Override
-    public void setDoInBackground(Runnable doInBackground){
+    public void setDoInBackground(Callable doInBackground){
         this.doInBackground = doInBackground;
     }
     @Override
@@ -56,11 +57,7 @@ public class SwingUIWorker extends SwingWorker<Boolean, DiskMark> implements UIW
 
     @Override
     protected Boolean doInBackground() throws Exception {
-
-        SwingUtilities.invokeLater(doInBackground);
-
-        //how to return st??
-        return null;
+        return doInBackground.call();
     }
 
     /**
