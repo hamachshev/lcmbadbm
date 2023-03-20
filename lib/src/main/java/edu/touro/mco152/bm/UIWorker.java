@@ -16,4 +16,6 @@ public interface UIWorker<T, V> {
     void addPropertyChangeListenerToProcess(PropertyChangeListener listener);
 
     void executeProcess();
+
+    void setDoInBackground(Runnable doInBackground);
 }

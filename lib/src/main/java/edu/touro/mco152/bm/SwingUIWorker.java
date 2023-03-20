@@ -15,6 +15,7 @@ public class SwingUIWorker extends SwingWorker<Boolean, DiskMark> implements UIW
     Boolean lastStatus = null;  // so far unknown'
     private Runnable doInBackground;
 
+    @Override
     public void setDoInBackground(Runnable doInBackground){
         this.doInBackground = doInBackground;
     }

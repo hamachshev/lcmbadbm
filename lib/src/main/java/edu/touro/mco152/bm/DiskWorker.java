@@ -41,13 +41,29 @@ import static edu.touro.mco152.bm.DiskMark.MarkType.WRITE;
 public class DiskWorker {
 
 
-    private UIWorker uiWorker;
+     UIWorker uiWorker;
     public DiskWorker(UIWorker uiWorker){
         this.uiWorker = uiWorker;
+        setDoInBackground();
+        execute();
     }
 
 
-    @Override
+    void setDoInBackground(){
+        uiWorker.setDoInBackground(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    doInBackground();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+    }
+
+
+
     protected Boolean doInBackground() throws Exception {
 
         /*
@@ -290,6 +306,10 @@ public class DiskWorker {
         }
         App.nextMarkNumber += App.numOfMarks;
         return true;
+    }
+
+    public void execute(){
+        uiWorker.executeProcess();
     }
 
 
