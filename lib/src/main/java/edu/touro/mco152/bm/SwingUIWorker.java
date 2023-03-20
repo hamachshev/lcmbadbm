@@ -6,11 +6,12 @@ import java.util.concurrent.ExecutionException;
 
 public class SwingUIWorker extends SwingWorker<Boolean, DiskMark> implements UIWorker<Boolean, DiskMark> {
 
-    private final Runnable doInBackground;
+    private Runnable doInBackground;
 
-    public SwingUIWorker(Runnable doInBackground){
-        this.doInBackground = doInBackground;
-    }
+   public void setDoInBackground(Runnable doInBackground){
+       this.doInBackground = doInBackground;
+   }
+
     @Override
     public boolean isProcessCancelled() {
         return isCancelled();
