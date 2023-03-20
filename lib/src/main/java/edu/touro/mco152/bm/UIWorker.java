@@ -4,16 +4,16 @@ import java.beans.PropertyChangeListener;
 import java.util.concurrent.ExecutionException;
 
 public interface UIWorker<T, V> {
-    boolean isCancelled();
-    void setProgress(int progress);
+    boolean isProcessCancelled();
+    void setProcessProgress(int progress);
 
-    void publish(V... chunks);
+    void publishProcessChunks(V... chunks);
 
-    T get() throws InterruptedException, ExecutionException;
+    T getProcessResult() throws InterruptedException, ExecutionException;
 
-    boolean cancel(boolean mayInterruptIfRunning);
+    boolean cancelProcess(boolean mayInterruptIfRunning);
 
-    void addPropertyChangeListener(PropertyChangeListener listener);
+    void addPropertyChangeListenerToProcess(PropertyChangeListener listener);
 
-    void execute();
+    void executeProcess();
 }
