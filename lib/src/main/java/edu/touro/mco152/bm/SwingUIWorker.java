@@ -37,7 +37,7 @@ public class SwingUIWorker extends SwingWorker<Boolean, DiskMark> implements UIW
 
     @Override
     public Boolean getProcessResult() throws InterruptedException, ExecutionException {
-        return get();
+        return super.get();
     }
 
     @Override
@@ -82,7 +82,7 @@ public class SwingUIWorker extends SwingWorker<Boolean, DiskMark> implements UIW
     protected void done() {
         // Obtain final status, might from doInBackground ret value, or SwingWorker error
         try {
-            lastStatus = super.get();   // record for future access
+            lastStatus = getProcessResult();   // record for future access
         } catch (Exception e) {
             Logger.getLogger(App.class.getName()).warning("Problem obtaining final status: " + e.getMessage());
         }

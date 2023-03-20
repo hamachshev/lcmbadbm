@@ -42,8 +42,8 @@ import static edu.touro.mco152.bm.DiskMark.MarkType.WRITE;
 public class DiskWorker {
 
 
-     private UIWorker uiWorker;
-    public DiskWorker(UIWorker uiWorker){
+     private UIWorker<Boolean, DiskMark> uiWorker;
+    public DiskWorker(UIWorker<Boolean, DiskMark> uiWorker){
         this.uiWorker = uiWorker;
         setDoInBackground();
     }
