@@ -123,7 +123,7 @@ public class DiskWorker {
               that keeps writing data (in its own loop - for specified # of blocks). Each 'Mark' is timed
               and is reported to the GUI for display as each Mark completes.
              */
-                            for (int m = startFileNum; m < startFileNum + App.numOfMarks && !isCancelled(); m++) {
+                            for (int m = startFileNum; m < startFileNum + App.numOfMarks && !uiWorker.isProcessCancelled(); m++) {
 
                                 if (App.multiFile) {
                                     testFile = new File(dataDir.getAbsolutePath()
@@ -157,7 +157,7 @@ public class DiskWorker {
                             /*
                               Report to GUI what percentage level of Entire BM (#Marks * #Blocks) is done.
                              */
-                                            setProgress((int) percentComplete);
+                                            uiWorker.setProcessProgress((int) percentComplete);
                                         }
                                     }
                                 } catch (IOException ex) {
@@ -180,7 +180,7 @@ public class DiskWorker {
                 /*
                   Let the GUI know the interim result described by the current Mark
                  */
-                                publish(wMark);
+                                uiWorker.publishProcessChunks(wMark);
 
                                 // Keep track of statistics to be displayed and persisted after all Marks are done.
                                 run.setRunMax(wMark.getCumMax());
@@ -207,7 +207,7 @@ public class DiskWorker {
          */
 
                         // try renaming all files to clear catch
-                        if (App.readTest && App.writeTest && !isCancelled()) {
+                        if (App.readTest && App.writeTest && !uiWorker.isProcessCancelled()) {
                             JOptionPane.showMessageDialog(Gui.mainFrame,
                                     """
                                             For valid READ measurements please clear the disk cache by
@@ -232,7 +232,7 @@ public class DiskWorker {
                             Gui.chartPanel.getChart().getTitle().setVisible(true);
                             Gui.chartPanel.getChart().getTitle().setText(run.getDiskInfo());
 
-                            for (int m = startFileNum; m < startFileNum + App.numOfMarks && !isCancelled(); m++) {
+                            for (int m = startFileNum; m < startFileNum + App.numOfMarks && !uiWorker.isProcessCancelled(); m++) {
 
                                 if (App.multiFile) {
                                     testFile = new File(dataDir.getAbsolutePath()
@@ -257,7 +257,7 @@ public class DiskWorker {
                                             rUnitsComplete++;
                                             unitsComplete = rUnitsComplete + wUnitsComplete;
                                             percentComplete = (float) unitsComplete / (float) unitsTotal * 100f;
-                                            setProgress((int) percentComplete);
+                                            uiWorker.setProcessProgress((int) percentComplete);
                                         }
                                     }
                                 } catch (FileNotFoundException ex) {
@@ -276,7 +276,7 @@ public class DiskWorker {
                                 msg("m:" + m + " READ IO is " + rMark.getBwMbSec() + " MB/s    "
                                         + "(MBread " + mbRead + " in " + sec + " sec)");
                                 App.updateMetrics(rMark);
-                                publish(rMark);
+                                uiWorker.publishProcessChunks(rMark);
 
                                 run.setRunMax(rMark.getCumMax());
                                 run.setRunMin(rMark.getCumMin());
