@@ -6,12 +6,12 @@ import edu.touro.mco152.bm.ui.Gui;
 
 import jakarta.persistence.EntityManager;
 import javax.swing.*;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,11 +42,10 @@ import static edu.touro.mco152.bm.DiskMark.MarkType.WRITE;
 public class DiskWorker {
 
 
-     UIWorker uiWorker;
+     private UIWorker uiWorker;
     public DiskWorker(UIWorker uiWorker){
         this.uiWorker = uiWorker;
         setDoInBackground();
-        execute();
     }
 
 
@@ -306,6 +305,14 @@ public class DiskWorker {
 
     public void execute(){
         uiWorker.executeProcess();
+    }
+
+    public void cancel(boolean mayInterruptIfRunning){
+        uiWorker.cancelProcess(mayInterruptIfRunning);
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener propertyChangeListener){
+        uiWorker.addPropertyChangeListenerToProcess(propertyChangeListener);
     }
 
 
