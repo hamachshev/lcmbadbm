@@ -37,10 +37,16 @@ import static edu.touro.mco152.bm.DiskMark.MarkType.WRITE;
  * Swing using an instance of the DiskMark class.
  */
 
-public class DiskWorker extends SwingWorker<Boolean, DiskMark> {
+
+public class DiskWorker {
 
     // Record any success or failure status returned from SwingWorker (might be us or super)
     Boolean lastStatus = null;  // so far unknown
+    private UIWorker uiWorker;
+    public DiskWorker(UIWorker uiWorker){
+        this.uiWorker = uiWorker;
+    }
+
 
     @Override
     protected Boolean doInBackground() throws Exception {
