@@ -5,7 +5,9 @@ import edu.touro.mco152.bm.persist.DiskRun;
 
 import java.util.ArrayList;
 
-
+/**
+ * Helper class to allow the testing suite to get the results of a benchmark, and other status updates about a benchmark.
+ */
 public class  TestUtil {
 
     private static boolean stillRunning;

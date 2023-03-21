@@ -13,6 +13,10 @@ import java.io.File;
 import java.util.Properties;
 import edu.touro.mco152.bm.TestUtil;
 
+/**
+ * Tests to test the implementation of Diskworker with TestsUIWorker
+ */
+
 public class BenchmarkingTests {
 
     /**

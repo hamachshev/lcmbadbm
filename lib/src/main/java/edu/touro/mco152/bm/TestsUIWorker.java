@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
 
+/**
+ * Alternative to swinguiworker, to run the benchmark from JUnit tests.
+ */
+
 public class TestsUIWorker implements UIWorker<Boolean, DiskMark>{
 
     Boolean lastStatus = null;  // so far unknown
