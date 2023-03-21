@@ -18,5 +18,5 @@ public interface UIWorker<T, V> {
 
     void executeProcess();
 
-    void setDoInBackground(Callable doInBackground);
+    void setDoInBackground(Callable<Boolean> doInBackground);
 }

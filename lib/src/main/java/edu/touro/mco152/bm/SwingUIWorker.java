@@ -13,11 +13,11 @@ import static edu.touro.mco152.bm.App.dataDir;
 
 public class SwingUIWorker extends SwingWorker<Boolean, DiskMark> implements UIWorker<Boolean, DiskMark> {
     // Record any success or failure status returned from SwingWorker (might be us or super)
-    Boolean lastStatus = null;  // so far unknown'
+    Boolean lastStatus = null;  // so far unknown
     private Callable<Boolean> doInBackground;
 
     @Override
-    public void setDoInBackground(Callable doInBackground){
+    public void setDoInBackground(Callable<Boolean> doInBackground){
         this.doInBackground = doInBackground;
     }
     @Override
