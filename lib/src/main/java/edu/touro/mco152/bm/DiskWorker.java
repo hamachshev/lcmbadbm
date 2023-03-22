@@ -65,7 +65,7 @@ public class DiskWorker {
                         msg("Running readTest " + App.readTest + "   writeTest " + App.writeTest);
                         msg("num files: " + App.numOfMarks + ", num blks: " + App.numOfBlocks
                                 + ", blk size (kb): " + App.blockSizeKb + ", blockSequence: " + App.blockSequence);
-                System.out.println("continue");
+
 
         /*
           init local vars that keep track of benchmarks, and a large read/write buffer
