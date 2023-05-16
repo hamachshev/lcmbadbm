@@ -1,16 +1,26 @@
 package edu.touro.mco152.bm;
 
+import edu.touro.mco152.bm.ui.Gui;
+
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
+import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Logger;
+
+import static edu.touro.mco152.bm.App.dataDir;
+
 
 public class SwingUIWorker extends SwingWorker<Boolean, DiskMark> implements UIWorker<Boolean, DiskMark> {
+    // Record any success or failure status returned from SwingWorker (might be us or super)
+    Boolean lastStatus = null;  // so far unknown'
+    private Callable<Boolean> doInBackground;
 
-    private Runnable doInBackground;
-
-   public void setDoInBackground(Runnable doInBackground){
-       this.doInBackground = doInBackground;
-   }
+    @Override
+    public void setDoInBackground(Callable doInBackground){
+        this.doInBackground = doInBackground;
+    }
 
     @Override
     public boolean isProcessCancelled() {
@@ -29,7 +39,7 @@ public class SwingUIWorker extends SwingWorker<Boolean, DiskMark> implements UIW
 
     @Override
     public Boolean getProcessResult() throws InterruptedException, ExecutionException {
-        return get();
+        return super.get();
     }
 
     @Override
@@ -49,10 +59,44 @@ public class SwingUIWorker extends SwingWorker<Boolean, DiskMark> implements UIW
 
     @Override
     protected Boolean doInBackground() throws Exception {
+        return doInBackground.call();
+    }
 
-        SwingUtilities.invokeLater(doInBackground);
+    /**
+     * Process a list of 'chunks' that have been processed, ie that our thread has previously
+     * published to Swing. For my info, watch Professor Cohen's video -
+     * Module_6_RefactorBadBM Swing_DiskWorker_Tutorial.mp4
+     * @param markList a list of DiskMark objects reflecting some completed benchmarks
+     */
+    @Override
+    protected void process(List<DiskMark> markList) {
+        markList.stream().forEach((dm) -> {
+            if (dm.type == DiskMark.MarkType.WRITE) {
+                Gui.addWriteMark(dm);
+            } else {
+                Gui.addReadMark(dm);
+            }
+        });
+    }
 
-        //how to return st??
-        return null;
+
+    @Override
+    protected void done() {
+        // Obtain final status, might from doInBackground ret value, or SwingWorker error
+        try {
+            lastStatus = getProcessResult();   // record for future access
+        } catch (Exception e) {
+            Logger.getLogger(App.class.getName()).warning("Problem obtaining final status: " + e.getMessage());
+        }
+
+        if (App.autoRemoveData) {
+            Util.deleteDirectory(dataDir);
+        }
+        App.state = App.State.IDLE_STATE;
+        Gui.mainFrame.adjustSensitivity();
+    }
+
+    public Boolean getLastStatus() {
+        return lastStatus;
     }
 }
