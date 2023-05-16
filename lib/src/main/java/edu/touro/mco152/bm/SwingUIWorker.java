@@ -11,9 +11,11 @@ import java.util.logging.Logger;
 
 import static edu.touro.mco152.bm.App.dataDir;
 
+
 /**
  * Swing implementation of methods that Diskworker needs to run, can be passed into diskworker to enable swing usage.
  */
+
 
 public class SwingUIWorker extends SwingWorker<Boolean, DiskMark> implements UIWorker<Boolean, DiskMark> {
     // Record any success or failure status returned from SwingWorker (might be us or super)
@@ -24,6 +26,7 @@ public class SwingUIWorker extends SwingWorker<Boolean, DiskMark> implements UIW
     public void setDoInBackground(Callable<Boolean> doInBackground){
         this.doInBackground = doInBackground;
     }
+
     @Override
     public boolean isProcessCancelled() {
         return isCancelled();
