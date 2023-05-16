@@ -4,6 +4,12 @@ import java.beans.PropertyChangeListener;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Generic implementation of interface that includes all the methods necessary for DiskWorker to run, enabling DIP.
+ * @param <T>
+ * @param <V>
+ */
+
 public interface UIWorker<T, V> {
     boolean isProcessCancelled();
     void setProcessProgress(int progress);
@@ -18,5 +24,5 @@ public interface UIWorker<T, V> {
 
     void executeProcess();
 
-    void setDoInBackground(Callable doInBackground);
+    void setDoInBackground(Callable<Boolean> doInBackground);
 }

@@ -41,8 +41,7 @@ import static edu.touro.mco152.bm.DiskMark.MarkType.WRITE;
 
 public class DiskWorker {
 
-
-     private UIWorker<Boolean, DiskMark> uiWorker;
+    private UIWorker<Boolean, DiskMark> uiWorker;
     public DiskWorker(UIWorker<Boolean, DiskMark> uiWorker){
         this.uiWorker = uiWorker;
         setDoInBackground();
@@ -66,6 +65,7 @@ public class DiskWorker {
                         msg("Running readTest " + App.readTest + "   writeTest " + App.writeTest);
                         msg("num files: " + App.numOfMarks + ", num blks: " + App.numOfBlocks
                                 + ", blk size (kb): " + App.blockSizeKb + ", blockSequence: " + App.blockSequence);
+
 
         /*
           init local vars that keep track of benchmarks, and a large read/write buffer
@@ -193,7 +193,9 @@ public class DiskWorker {
              */
                             EntityManager em = EM.getEntityManager();
                             em.getTransaction().begin();
-                            em.persist(run);
+//                            em.persist(run);
+                            // instead of persisting bc not working for this assignment, sent to TestUtil
+                            TestUtil.setDiskRun(run);
                             em.getTransaction().commit();
 
                             Gui.runPanel.addRun(run);
@@ -288,7 +290,9 @@ public class DiskWorker {
              */
                             EntityManager em = EM.getEntityManager();
                             em.getTransaction().begin();
-                            em.persist(run);
+//                            em.persist(run);
+                            // instead of persisting bc not working for this assignment, sent to TestUtil
+                            TestUtil.setDiskRun(run);
                             em.getTransaction().commit();
 
                             Gui.runPanel.addRun(run);
