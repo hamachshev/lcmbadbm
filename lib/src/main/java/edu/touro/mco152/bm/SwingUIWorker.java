@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import static edu.touro.mco152.bm.App.dataDir;
 
+
 public class SwingUIWorker extends SwingWorker<Boolean, DiskMark> implements UIWorker<Boolean, DiskMark> {
     // Record any success or failure status returned from SwingWorker (might be us or super)
     Boolean lastStatus = null;  // so far unknown'
@@ -20,6 +21,7 @@ public class SwingUIWorker extends SwingWorker<Boolean, DiskMark> implements UIW
     public void setDoInBackground(Callable doInBackground){
         this.doInBackground = doInBackground;
     }
+
     @Override
     public boolean isProcessCancelled() {
         return isCancelled();
