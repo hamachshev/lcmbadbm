@@ -16,7 +16,7 @@ import static edu.touro.mco152.bm.App.*;
 import static edu.touro.mco152.bm.App.msg;
 import static edu.touro.mco152.bm.DiskMark.MarkType.WRITE;
 
-public class WriteCommand {
+public class WriteCommand implements BenchmarkCommand{
 
     private UIWorker<Boolean, DiskMark> uiWorker;
     private int numOfMarks;
