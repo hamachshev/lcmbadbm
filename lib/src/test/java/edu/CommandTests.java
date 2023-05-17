@@ -15,6 +15,9 @@ import java.util.Properties;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * Tests to test the Command pattern implementation, with ReadCommand and WriteCommand
+ */
 public class CommandTests {
 
 

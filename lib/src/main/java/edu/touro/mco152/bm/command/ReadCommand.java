@@ -18,6 +18,9 @@ import java.util.logging.Logger;
 import static edu.touro.mco152.bm.App.*;
 import static edu.touro.mco152.bm.DiskMark.MarkType.READ;
 
+/**
+ * Command that you can pass into the Command Executor to run a read benchmark
+ */
 public class ReadCommand implements BenchmarkCommand{
 
     private UIWorker<Boolean, DiskMark> uiWorker;
