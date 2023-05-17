@@ -6,7 +6,7 @@ public class CommandExecutor {
         this.command = command;
     }
 
-    public boolean execute() throws Exception {
+    public boolean execute()  {
         return command.execute();
     }
 }

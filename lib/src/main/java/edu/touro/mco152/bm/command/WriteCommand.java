@@ -63,11 +63,11 @@ public class WriteCommand implements BenchmarkCommand{
     int startFileNum = App.nextMarkNumber;
 
     public boolean execute() {
-        DiskRun run = new DiskRun(DiskRun.IOMode.WRITE, App.blockSequence);
-        run.setNumMarks(App.numOfMarks);
-        run.setNumBlocks(App.numOfBlocks);
-        run.setBlockSize(App.blockSizeKb);
-        run.setTxSize(App.targetTxSizeKb());
+        DiskRun run = new DiskRun(DiskRun.IOMode.WRITE, blockSequence);
+        run.setNumMarks(numOfMarks);
+        run.setNumBlocks(numOfBlocks);
+        run.setBlockSize(blockSizeKb);
+        run.setTxSize(targetTxSizeKb());
         run.setDiskInfo(Util.getDiskInfo(dataDir));
 
         // Tell logger and GUI to display what we know so far about the Run
@@ -86,7 +86,7 @@ public class WriteCommand implements BenchmarkCommand{
               that keeps writing data (in its own loop - for specified # of blocks). Each 'Mark' is timed
               and is reported to the GUI for display as each Mark completes.
              */
-        for (int m = startFileNum; m < startFileNum + App.numOfMarks && !uiWorker.isProcessCancelled(); m++) {
+        for (int m = startFileNum; m < startFileNum + numOfMarks && !uiWorker.isProcessCancelled(); m++) {
 
             if (App.multiFile) {
                 testFile = new File(dataDir.getAbsolutePath()
@@ -105,7 +105,7 @@ public class WriteCommand implements BenchmarkCommand{
             try {
                 try (RandomAccessFile rAccFile = new RandomAccessFile(testFile, mode)) {
                     for (int b = 0; b < numOfBlocks; b++) {
-                        if (App.blockSequence == DiskRun.BlockSequence.RANDOM) {
+                        if (blockSequence == DiskRun.BlockSequence.RANDOM) {
                             int rLoc = Util.randInt(0, numOfBlocks - 1);
                             rAccFile.seek((long) rLoc * blockSize);
                         } else {
@@ -164,6 +164,9 @@ public class WriteCommand implements BenchmarkCommand{
 
         Gui.runPanel.addRun(run);
         return true;
+    }
+    private long targetTxSizeKb() {
+        return (long) blockSizeKb * numOfBlocks * numOfMarks;
     }
     }
 

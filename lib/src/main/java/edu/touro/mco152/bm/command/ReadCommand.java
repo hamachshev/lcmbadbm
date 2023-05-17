@@ -9,6 +9,7 @@ import jakarta.persistence.EntityManager;
 import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Date;
 import java.util.logging.Level;
@@ -28,7 +29,6 @@ public class ReadCommand implements BenchmarkCommand{
 
     // declare local vars formerly in DiskWorker
 
-    private int unitsComplete = 0;
 
     private int unitsTotal;
 
@@ -41,6 +41,11 @@ public class ReadCommand implements BenchmarkCommand{
 
     private DiskRun.BlockSequence blockSequence;
 
+    private int wUnitsComplete = 0, rUnitsComplete = 0, unitsComplete;
+
+    private int wUnitsTotal;
+
+
 
     public ReadCommand(UIWorker<Boolean, DiskMark> uiWorker, int numOfMarks, int numOfBlocks, int blockSizeKb, DiskRun.BlockSequence blockSequence){
         this.blockSizeKb = blockSizeKb;
@@ -51,6 +56,12 @@ public class ReadCommand implements BenchmarkCommand{
         blockSize = blockSizeKb*KILOBYTE;
         blockArr = new byte [blockSize];
         this.blockSequence = blockSequence;
+
+
+        int wUnitsTotal = App.writeTest ? numOfBlocks * numOfMarks : 0;
+        int rUnitsTotal = App.readTest ? numOfBlocks * numOfMarks : 0;
+        int unitsTotal = wUnitsTotal + rUnitsTotal;
+
 
         for(int b=0; b<blockArr.length; b++) {
             if (b%2==0) {
@@ -63,12 +74,12 @@ public class ReadCommand implements BenchmarkCommand{
     DiskMark rMark;
     int startFileNum = App.nextMarkNumber;
 
-    public boolean execute() throws Exception{
-        DiskRun run = new DiskRun(DiskRun.IOMode.READ, App.blockSequence);
-        run.setNumMarks(App.numOfMarks);
-        run.setNumBlocks(App.numOfBlocks);
-        run.setBlockSize(App.blockSizeKb);
-        run.setTxSize(App.targetTxSizeKb());
+    public boolean execute() {
+        DiskRun run = new DiskRun(DiskRun.IOMode.READ, blockSequence);
+        run.setNumMarks(numOfMarks);
+        run.setNumBlocks(numOfBlocks);
+        run.setBlockSize(blockSizeKb);
+        run.setTxSize(targetTxSizeKb());
         run.setDiskInfo(Util.getDiskInfo(dataDir));
 
         msg("disk info: (" + run.getDiskInfo() + ")");
@@ -76,7 +87,7 @@ public class ReadCommand implements BenchmarkCommand{
         Gui.chartPanel.getChart().getTitle().setVisible(true);
         Gui.chartPanel.getChart().getTitle().setText(run.getDiskInfo());
 
-        for (int m = startFileNum; m < startFileNum + App.numOfMarks && !uiWorker.isProcessCancelled(); m++) {
+        for (int m = startFileNum; m < startFileNum + numOfMarks && !uiWorker.isProcessCancelled(); m++) {
 
             if (App.multiFile) {
                 testFile = new File(dataDir.getAbsolutePath()
@@ -90,7 +101,7 @@ public class ReadCommand implements BenchmarkCommand{
             try {
                 try (RandomAccessFile rAccFile = new RandomAccessFile(testFile, "r")) {
                     for (int b = 0; b < numOfBlocks; b++) {
-                        if (App.blockSequence == DiskRun.BlockSequence.RANDOM) {
+                        if (blockSequence == DiskRun.BlockSequence.RANDOM) {
                             int rLoc = Util.randInt(0, numOfBlocks - 1);
                             rAccFile.seek((long) rLoc * blockSize);
                         } else {
@@ -98,7 +109,8 @@ public class ReadCommand implements BenchmarkCommand{
                         }
                         rAccFile.readFully(blockArr, 0, blockSize);
                         totalBytesReadInMark += blockSize;
-                        unitsComplete++;
+                        rUnitsComplete++;
+                        unitsComplete = rUnitsComplete + wUnitsComplete;
                         percentComplete = (float) unitsComplete / (float) unitsTotal * 100f;
                         uiWorker.setProcessProgress((int) percentComplete);
                     }
@@ -110,6 +122,8 @@ public class ReadCommand implements BenchmarkCommand{
                 JOptionPane.showMessageDialog(Gui.mainFrame, emsg, "Unable to READ", JOptionPane.ERROR_MESSAGE);
                 msg(emsg);
                 return false;
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
             long endTime = System.nanoTime();
             long elapsedTimeNs = endTime - startTime;
@@ -139,5 +153,11 @@ public class ReadCommand implements BenchmarkCommand{
 
         Gui.runPanel.addRun(run);
         return true;
+
+
+    }
+
+    private long targetTxSizeKb() {
+        return (long) blockSizeKb * numOfBlocks * numOfMarks;
     }
 }
