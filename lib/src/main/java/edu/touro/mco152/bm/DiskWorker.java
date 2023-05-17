@@ -1,24 +1,17 @@
 package edu.touro.mco152.bm;
 
-import edu.touro.mco152.bm.persist.DiskRun;
-import edu.touro.mco152.bm.persist.EM;
+import edu.touro.mco152.bm.command.CommandExecutor;
+import edu.touro.mco152.bm.command.ReadCommand;
+import edu.touro.mco152.bm.command.WriteCommand;
 import edu.touro.mco152.bm.ui.Gui;
 
-import jakarta.persistence.EntityManager;
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.util.Date;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static edu.touro.mco152.bm.App.*;
-import static edu.touro.mco152.bm.DiskMark.MarkType.READ;
-import static edu.touro.mco152.bm.DiskMark.MarkType.WRITE;
 
 /**
  * Run the disk benchmarking as a Swing-compliant thread (only one of these threads can run at
@@ -66,25 +59,6 @@ public class DiskWorker {
                         msg("num files: " + App.numOfMarks + ", num blks: " + App.numOfBlocks
                                 + ", blk size (kb): " + App.blockSizeKb + ", blockSequence: " + App.blockSequence);
 
-
-        /*
-          init local vars that keep track of benchmarks, and a large read/write buffer
-         */
-                        int wUnitsComplete = 0, rUnitsComplete = 0, unitsComplete;
-                        int wUnitsTotal = App.writeTest ? numOfBlocks * numOfMarks : 0;
-                        int rUnitsTotal = App.readTest ? numOfBlocks * numOfMarks : 0;
-                        int unitsTotal = wUnitsTotal + rUnitsTotal;
-                        float percentComplete;
-
-                        int blockSize = blockSizeKb * KILOBYTE;
-                        byte[] blockArr = new byte[blockSize];
-                        for (int b = 0; b < blockArr.length; b++) {
-                            if (b % 2 == 0) {
-                                blockArr[b] = (byte) 0xFF;
-                            }
-                        }
-
-                        DiskMark wMark, rMark;  // declare vars that will point to objects used to pass progress to UI
 
                         Gui.updateLegend();  // init chart legend info
 

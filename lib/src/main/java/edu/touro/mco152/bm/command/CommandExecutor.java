@@ -1,4 +1,4 @@
-package edu.touro.mco152.bm;
+package edu.touro.mco152.bm.command;
 
 public class CommandExecutor {
     private final BenchmarkCommand command;
