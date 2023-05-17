@@ -193,7 +193,7 @@ public class DiskWorker {
              */
                             EntityManager em = EM.getEntityManager();
                             em.getTransaction().begin();
-//                            em.persist(run);
+                            em.persist(run);
                             // instead of persisting bc not working for this assignment, sent to TestUtil
                             TestUtil.setDiskRun(run);
                             em.getTransaction().commit();
@@ -290,7 +290,7 @@ public class DiskWorker {
              */
                             EntityManager em = EM.getEntityManager();
                             em.getTransaction().begin();
-//                            em.persist(run);
+                            em.persist(run);
                             // instead of persisting bc not working for this assignment, sent to TestUtil
                             TestUtil.setDiskRun(run);
                             em.getTransaction().commit();

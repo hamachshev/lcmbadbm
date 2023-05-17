@@ -55,3 +55,12 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+sourceSets {
+    main {
+
+            output.resourcesDir = sourceSets.main.output.classesDirs.asPath
+            compileJava.dependsOn(processResources)
+
+    }
+}
+
