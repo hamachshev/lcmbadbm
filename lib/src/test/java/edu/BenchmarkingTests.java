@@ -37,6 +37,7 @@ public class BenchmarkingTests {
 
         // code from startBenchmark
         //4. create data dir reference
+
         App.dataDir = new File(App.locationDir.getAbsolutePath() + File.separator + App.DATADIRNAME);
 
         //5. remove existing test data if exist
