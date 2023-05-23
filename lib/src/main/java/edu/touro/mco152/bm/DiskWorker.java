@@ -78,6 +78,8 @@ public class DiskWorker {
                             if (!executor.execute())
                                 return false;
 
+
+
                         }
 
         /*
@@ -104,6 +106,7 @@ public class DiskWorker {
                             CommandExecutor executor =new CommandExecutor(new ReadCommand(uiWorker, numOfMarks, numOfBlocks, blockSizeKb, blockSequence));
                             if (!executor.execute())
                                 return false;
+
 
                         }
                         App.nextMarkNumber += App.numOfMarks;
