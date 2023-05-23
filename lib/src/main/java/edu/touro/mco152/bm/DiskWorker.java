@@ -73,9 +73,11 @@ public class DiskWorker {
           The GUI allows a Write, Read, or both types of BMs to be started. They are done serially.
          */
                         if (App.writeTest) {
+
                             CommandExecutor executor =new CommandExecutor(new WriteCommand(uiWorker, numOfMarks, numOfBlocks, blockSizeKb, blockSequence));
                             if (!executor.execute())
                                 return false;
+
                         }
 
         /*
@@ -98,9 +100,11 @@ public class DiskWorker {
 
                         // Same as above, just for Read operations instead of Writes.
                         if (App.readTest) {
+
                             CommandExecutor executor =new CommandExecutor(new ReadCommand(uiWorker, numOfMarks, numOfBlocks, blockSizeKb, blockSequence));
                             if (!executor.execute())
                                 return false;
+
                         }
                         App.nextMarkNumber += App.numOfMarks;
                         return true;
