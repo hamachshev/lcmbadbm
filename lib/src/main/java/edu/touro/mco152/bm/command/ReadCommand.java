@@ -11,7 +11,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,6 +50,8 @@ public class ReadCommand implements BenchmarkCommand{
 
     private int wUnitsTotal;
 
+    private List<Observer> observers;
+
 
 
     public ReadCommand(UIWorker<Boolean, DiskMark> uiWorker, int numOfMarks, int numOfBlocks, int blockSizeKb, DiskRun.BlockSequence blockSequence){
@@ -71,6 +75,7 @@ public class ReadCommand implements BenchmarkCommand{
                 blockArr[b]=(byte)0xFF;
             }
         }
+        observers = new ArrayList<>();
     }
 
 
@@ -162,5 +167,19 @@ public class ReadCommand implements BenchmarkCommand{
 
     private long targetTxSizeKb() {
         return (long) blockSizeKb * numOfBlocks * numOfMarks;
+    }
+
+    public void addObserver(Observer o){
+        observers.add(o);
+    }
+
+    public void removeObserver(Observer o){
+        observers.remove(o);
+    }
+
+    private void notifyObservers(){
+        for(Observer o: observers){
+            o.update();
+        }
     }
 }
