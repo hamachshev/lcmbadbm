@@ -152,14 +152,11 @@ public class ReadCommand implements BenchmarkCommand{
             /*
               Persist info about the Read BM Run (e.g. into Derby Database) and add it to a GUI panel
              */
-        EntityManager em = EM.getEntityManager();
-        em.getTransaction().begin();
-//                            em.persist(run);
-        // instead of persisting bc not working for this assignment, sent to TestUtil
-        TestUtil.setDiskRun(run);
-        em.getTransaction().commit();
+        notifyObservers(run);
 
-        Gui.runPanel.addRun(run);
+
+
+
         return true;
 
 
@@ -177,9 +174,9 @@ public class ReadCommand implements BenchmarkCommand{
         observers.remove(o);
     }
 
-    private void notifyObservers(){
+    private void notifyObservers(DiskRun run){
         for(Observer o: observers){
-            o.update();
+            o.update(run);
         }
     }
 }
