@@ -161,17 +161,8 @@ public class WriteCommand implements BenchmarkCommand{
             run.setEndTime(new Date());
         } // END outer loop for specified duration (number of 'marks') for WRITE benchmark
 
-            /*
-              Persist info about the Write BM Run (e.g. into Derby Database) and add it to a GUI panel
-             */
-        EntityManager em = EM.getEntityManager();
-        em.getTransaction().begin();
-//                            em.persist(run);
-        // instead of persisting bc not working for this assignment, sent to TestUtil
-        TestUtil.setDiskRun(run);
-        em.getTransaction().commit();
+        notifyObservers(run);
 
-        Gui.runPanel.addRun(run);
         return true;
     }
     private long targetTxSizeKb() {
@@ -186,9 +177,9 @@ public class WriteCommand implements BenchmarkCommand{
         observers.remove(o);
     }
 
-    private void notifyObservers(){
+    private void notifyObservers(DiskRun run){
         for(Observer o: observers){
-            o.update();
+            o.update(run);
         }
     }
     }
