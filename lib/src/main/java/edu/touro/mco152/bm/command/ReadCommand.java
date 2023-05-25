@@ -11,7 +11,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,6 +50,8 @@ public class ReadCommand implements BenchmarkCommand{
 
     private int wUnitsTotal;
 
+    private List<Observer> observers;
+
 
 
     public ReadCommand(UIWorker<Boolean, DiskMark> uiWorker, int numOfMarks, int numOfBlocks, int blockSizeKb, DiskRun.BlockSequence blockSequence){
@@ -71,6 +75,7 @@ public class ReadCommand implements BenchmarkCommand{
                 blockArr[b]=(byte)0xFF;
             }
         }
+        observers = new ArrayList<>();
     }
 
 
@@ -145,16 +150,13 @@ public class ReadCommand implements BenchmarkCommand{
         }
 
             /*
-              Persist info about the Read BM Run (e.g. into Derby Database) and add it to a GUI panel
+              notify observers
              */
-        EntityManager em = EM.getEntityManager();
-        em.getTransaction().begin();
-//                            em.persist(run);
-        // instead of persisting bc not working for this assignment, sent to TestUtil
-        TestUtil.setDiskRun(run);
-        em.getTransaction().commit();
+        notifyObservers(run);
 
-        Gui.runPanel.addRun(run);
+
+
+
         return true;
 
 
@@ -162,5 +164,32 @@ public class ReadCommand implements BenchmarkCommand{
 
     private long targetTxSizeKb() {
         return (long) blockSizeKb * numOfBlocks * numOfMarks;
+    }
+
+    /**
+     * add observers to the Observer list so that they can be notified by notifyObservers method
+     * @param o
+     */
+
+    public void addObserver(Observer o){
+        observers.add(o);
+    }
+
+    /**
+     * remove observers
+     * @param o
+     */
+    public void removeObserver(Observer o){
+        observers.remove(o);
+    }
+
+    /**
+     * update all the observers that a read command has finished
+     * @param run
+     */
+    private void notifyObservers(DiskRun run){
+        for(Observer o: observers){
+            o.update(run);
+        }
     }
 }

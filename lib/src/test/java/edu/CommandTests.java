@@ -4,6 +4,7 @@ import edu.touro.mco152.bm.*;
 import edu.touro.mco152.bm.command.CommandExecutor;
 import edu.touro.mco152.bm.command.ReadCommand;
 import edu.touro.mco152.bm.command.WriteCommand;
+import edu.touro.mco152.bm.persist.DatabaseObserver;
 import edu.touro.mco152.bm.persist.DiskRun;
 import edu.touro.mco152.bm.ui.Gui;
 import edu.touro.mco152.bm.ui.MainFrame;
@@ -59,7 +60,10 @@ public class CommandTests {
     void testCompletedSuccessfullyWrite() {
         TestsUIWorker testsUIWorker = new TestsUIWorker();
         setupDefaultAsPerProperties();
-        CommandExecutor executor = new CommandExecutor(new WriteCommand(testsUIWorker, 25, 128, 2048, DiskRun.BlockSequence.SEQUENTIAL));
+        WriteCommand writeCommand =  new WriteCommand(testsUIWorker, 25, 128, 2048, DiskRun.BlockSequence.SEQUENTIAL);
+        writeCommand.addObserver(new DatabaseObserver());
+
+        CommandExecutor executor = new CommandExecutor(writeCommand);
         assertTrue(executor.execute());
 
     }
@@ -68,7 +72,10 @@ public class CommandTests {
     void testCompletedSuccessfullyRead() {
         TestsUIWorker testsUIWorker = new TestsUIWorker();
         setupDefaultAsPerProperties();
-        CommandExecutor executor = new CommandExecutor(new ReadCommand(testsUIWorker, 25, 128, 2048, DiskRun.BlockSequence.SEQUENTIAL));
+        ReadCommand readCommand =  new ReadCommand(testsUIWorker, 25, 128, 2048, DiskRun.BlockSequence.SEQUENTIAL);
+        readCommand.addObserver(new DatabaseObserver());
+
+        CommandExecutor executor = new CommandExecutor(readCommand);
         assertTrue(executor.execute());
 
     }
@@ -77,7 +84,10 @@ public class CommandTests {
     void testValidProgressesWrite() {
         TestsUIWorker testsUIWorker = new TestsUIWorker();
         setupDefaultAsPerProperties();
-        CommandExecutor executor = new CommandExecutor(new WriteCommand(testsUIWorker, 25, 128, 2048, DiskRun.BlockSequence.SEQUENTIAL));
+        WriteCommand writeCommand =  new WriteCommand(testsUIWorker, 25, 128, 2048, DiskRun.BlockSequence.SEQUENTIAL);
+        writeCommand.addObserver(new DatabaseObserver());
+
+        CommandExecutor executor = new CommandExecutor(writeCommand);
         executor.execute();
         for (int i : TestUtil.getProgresses()) {
             if (i < 0 || i > 100)
@@ -89,7 +99,10 @@ public class CommandTests {
     void testValidProgressesRead() {
         TestsUIWorker testsUIWorker = new TestsUIWorker();
         setupDefaultAsPerProperties();
-        CommandExecutor executor = new CommandExecutor(new WriteCommand(testsUIWorker, 25, 128, 2048, DiskRun.BlockSequence.SEQUENTIAL));
+        ReadCommand readCommand =  new ReadCommand(testsUIWorker, 25, 128, 2048, DiskRun.BlockSequence.SEQUENTIAL);
+        readCommand.addObserver(new DatabaseObserver());
+
+        CommandExecutor executor = new CommandExecutor(readCommand);
         executor.execute();
         for (int i : TestUtil.getProgresses()) {
             if (i < 0 || i > 100)
@@ -100,7 +113,10 @@ public class CommandTests {
     void testValidLookingDiskrunRead() {
         TestsUIWorker testsUIWorker = new TestsUIWorker();
         setupDefaultAsPerProperties();
-        CommandExecutor executor = new CommandExecutor(new ReadCommand(testsUIWorker, 25, 128, 2048, DiskRun.BlockSequence.SEQUENTIAL));
+        ReadCommand readCommand =  new ReadCommand(testsUIWorker, 25, 128, 2048, DiskRun.BlockSequence.SEQUENTIAL);
+        readCommand.addObserver(new DatabaseObserver());
+
+        CommandExecutor executor = new CommandExecutor(readCommand);
         executor.execute();
 
         assertEquals(25,TestUtil.getDiskRun().getNumMarks());
@@ -117,7 +133,10 @@ public class CommandTests {
     void testValidLookingDiskrunWrite() {
         TestsUIWorker testsUIWorker = new TestsUIWorker();
         setupDefaultAsPerProperties();
-        CommandExecutor executor = new CommandExecutor(new WriteCommand(testsUIWorker, 25, 128, 2048, DiskRun.BlockSequence.SEQUENTIAL));
+        WriteCommand writeCommand =  new WriteCommand(testsUIWorker, 25, 128, 2048, DiskRun.BlockSequence.SEQUENTIAL);
+        writeCommand.addObserver(new DatabaseObserver());
+
+        CommandExecutor executor = new CommandExecutor(writeCommand);
         executor.execute();
 
         assertEquals(25,TestUtil.getDiskRun().getNumMarks());

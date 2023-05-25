@@ -9,7 +9,9 @@ import jakarta.persistence.EntityManager;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,6 +46,9 @@ public class WriteCommand implements BenchmarkCommand{
     private DiskRun.BlockSequence blockSequence;
 
 
+    private List<Observer> observers;
+
+
     public WriteCommand(UIWorker<Boolean, DiskMark> uiWorker, int numOfMarks, int numOfBlocks, int blockSizeKb, DiskRun.BlockSequence blockSequence){
         this.blockSizeKb = blockSizeKb;
         this.numOfMarks = numOfMarks;
@@ -59,6 +64,7 @@ public class WriteCommand implements BenchmarkCommand{
                 blockArr[b]=(byte)0xFF;
             }
         }
+        observers = new ArrayList<>();
     }
 
 
@@ -155,21 +161,42 @@ public class WriteCommand implements BenchmarkCommand{
             run.setEndTime(new Date());
         } // END outer loop for specified duration (number of 'marks') for WRITE benchmark
 
-            /*
-              Persist info about the Write BM Run (e.g. into Derby Database) and add it to a GUI panel
-             */
-        EntityManager em = EM.getEntityManager();
-        em.getTransaction().begin();
-//                            em.persist(run);
-        // instead of persisting bc not working for this assignment, sent to TestUtil
-        TestUtil.setDiskRun(run);
-        em.getTransaction().commit();
+        /**
+         * notfy observers that the run has finished and pass in the run data
+         */
+        notifyObservers(run);
 
-        Gui.runPanel.addRun(run);
         return true;
     }
     private long targetTxSizeKb() {
         return (long) blockSizeKb * numOfBlocks * numOfMarks;
+    }
+
+    /**
+     * add observers to the Observer list so that they can be notified by notifyObservers method
+     * @param o
+     */
+
+    public void addObserver(Observer o){
+        observers.add(o);
+    }
+
+    /**
+     * remove observers
+     * @param o
+     */
+    public void removeObserver(Observer o){
+        observers.remove(o);
+    }
+
+    /**
+     * update all the observers that a write command has finished
+     * @param run
+     */
+    private void notifyObservers(DiskRun run){
+        for(Observer o: observers){
+            o.update(run);
+        }
     }
     }
 

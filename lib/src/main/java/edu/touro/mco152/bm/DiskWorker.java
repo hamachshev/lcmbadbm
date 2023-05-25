@@ -3,6 +3,7 @@ package edu.touro.mco152.bm;
 import edu.touro.mco152.bm.command.CommandExecutor;
 import edu.touro.mco152.bm.command.ReadCommand;
 import edu.touro.mco152.bm.command.WriteCommand;
+import edu.touro.mco152.bm.persist.DatabaseObserver;
 import edu.touro.mco152.bm.ui.Gui;
 
 import javax.swing.*;
@@ -73,8 +74,15 @@ public class DiskWorker {
           The GUI allows a Write, Read, or both types of BMs to be started. They are done serially.
          */
                         if (App.writeTest) {
+                            WriteCommand write = new WriteCommand(uiWorker, numOfMarks, numOfBlocks, blockSizeKb, blockSequence);
+                            /**
+                             * add observers to the write command
+                             */
+                            write.addObserver(new DatabaseObserver());
+                            write.addObserver(new Gui());
+                            write.addObserver(new RulesObserver());
 
-                            CommandExecutor executor =new CommandExecutor(new WriteCommand(uiWorker, numOfMarks, numOfBlocks, blockSizeKb, blockSequence));
+                            CommandExecutor executor =new CommandExecutor(write);
                             if (!executor.execute())
                                 return false;
 
@@ -102,8 +110,15 @@ public class DiskWorker {
 
                         // Same as above, just for Read operations instead of Writes.
                         if (App.readTest) {
+                            ReadCommand read = new ReadCommand(uiWorker, numOfMarks, numOfBlocks, blockSizeKb, blockSequence);
+                            /**
+                             * add observers to the read command
+                             */
+                            read.addObserver(new DatabaseObserver());
+                            read.addObserver(new Gui());
+                            read.addObserver(new RulesObserver());
 
-                            CommandExecutor executor =new CommandExecutor(new ReadCommand(uiWorker, numOfMarks, numOfBlocks, blockSizeKb, blockSequence));
+                            CommandExecutor executor =new CommandExecutor(read);
                             if (!executor.execute())
                                 return false;
 
