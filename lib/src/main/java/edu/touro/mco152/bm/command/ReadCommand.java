@@ -150,7 +150,7 @@ public class ReadCommand implements BenchmarkCommand{
         }
 
             /*
-              Persist info about the Read BM Run (e.g. into Derby Database) and add it to a GUI panel
+              notify observers
              */
         notifyObservers(run);
 
@@ -166,14 +166,27 @@ public class ReadCommand implements BenchmarkCommand{
         return (long) blockSizeKb * numOfBlocks * numOfMarks;
     }
 
+    /**
+     * add observers to the Observer list so that they can be notified by notifyObservers method
+     * @param o
+     */
+
     public void addObserver(Observer o){
         observers.add(o);
     }
 
+    /**
+     * remove observers
+     * @param o
+     */
     public void removeObserver(Observer o){
         observers.remove(o);
     }
 
+    /**
+     * update all the observers that a read command has finished
+     * @param run
+     */
     private void notifyObservers(DiskRun run){
         for(Observer o: observers){
             o.update(run);

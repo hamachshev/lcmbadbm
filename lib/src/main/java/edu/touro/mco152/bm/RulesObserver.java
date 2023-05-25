@@ -3,6 +3,9 @@ package edu.touro.mco152.bm;
 import edu.touro.mco152.bm.externalsys.SlackManager;
 import edu.touro.mco152.bm.persist.DiskRun;
 
+/**
+ * Observer that gets a run when it is complete and based on certain logic responds accordingly
+ */
 public class RulesObserver implements Observer{
     @Override
     public void update(DiskRun run) {

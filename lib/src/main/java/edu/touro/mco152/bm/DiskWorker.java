@@ -75,6 +75,9 @@ public class DiskWorker {
          */
                         if (App.writeTest) {
                             WriteCommand write = new WriteCommand(uiWorker, numOfMarks, numOfBlocks, blockSizeKb, blockSequence);
+                            /**
+                             * add observers to the write command
+                             */
                             write.addObserver(new DatabaseObserver());
                             write.addObserver(new Gui());
                             write.addObserver(new RulesObserver());
@@ -108,6 +111,9 @@ public class DiskWorker {
                         // Same as above, just for Read operations instead of Writes.
                         if (App.readTest) {
                             ReadCommand read = new ReadCommand(uiWorker, numOfMarks, numOfBlocks, blockSizeKb, blockSequence);
+                            /**
+                             * add observers to the read command
+                             */
                             read.addObserver(new DatabaseObserver());
                             read.addObserver(new Gui());
                             read.addObserver(new RulesObserver());

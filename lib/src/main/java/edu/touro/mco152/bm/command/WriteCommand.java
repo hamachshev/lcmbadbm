@@ -161,6 +161,9 @@ public class WriteCommand implements BenchmarkCommand{
             run.setEndTime(new Date());
         } // END outer loop for specified duration (number of 'marks') for WRITE benchmark
 
+        /**
+         * notfy observers that the run has finished and pass in the run data
+         */
         notifyObservers(run);
 
         return true;
@@ -169,14 +172,27 @@ public class WriteCommand implements BenchmarkCommand{
         return (long) blockSizeKb * numOfBlocks * numOfMarks;
     }
 
+    /**
+     * add observers to the Observer list so that they can be notified by notifyObservers method
+     * @param o
+     */
+
     public void addObserver(Observer o){
         observers.add(o);
     }
 
+    /**
+     * remove observers
+     * @param o
+     */
     public void removeObserver(Observer o){
         observers.remove(o);
     }
 
+    /**
+     * update all the observers that a write command has finished
+     * @param run
+     */
     private void notifyObservers(DiskRun run){
         for(Observer o: observers){
             o.update(run);

@@ -16,6 +16,10 @@ import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * Test that the ObserverFlag works as an observer
+ */
+
 public class ObserverFlagTest {
     static TestObserverFlag testObserverFlag = new TestObserverFlag();
     private void setupDefaultAsPerProperties() {
