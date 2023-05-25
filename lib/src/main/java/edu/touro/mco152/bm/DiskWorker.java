@@ -77,6 +77,7 @@ public class DiskWorker {
                             WriteCommand write = new WriteCommand(uiWorker, numOfMarks, numOfBlocks, blockSizeKb, blockSequence);
                             write.addObserver(new DatabaseObserver());
                             write.addObserver(new Gui());
+                            write.addObserver(new RulesObserver());
 
                             CommandExecutor executor =new CommandExecutor(write);
                             if (!executor.execute())
@@ -109,6 +110,7 @@ public class DiskWorker {
                             ReadCommand read = new ReadCommand(uiWorker, numOfMarks, numOfBlocks, blockSizeKb, blockSequence);
                             read.addObserver(new DatabaseObserver());
                             read.addObserver(new Gui());
+                            read.addObserver(new RulesObserver());
 
                             CommandExecutor executor =new CommandExecutor(read);
                             if (!executor.execute())
